@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 let CryptoJS = require("crypto-js");
 let express = require("express");
 let bodyParser = require('body-parser');
@@ -18,9 +17,6 @@ class Block {
     public nonce: string;
     public hash: string;
     */
-=======
-class Block {
->>>>>>> Feature-1
     constructor(index, previousHash, timestamp, data, hash) {
         this.index = index;
         this.previousHash = previousHash.toString();
@@ -28,7 +24,6 @@ class Block {
         this.data = data;
         this.hash = hash.toString();
     }
-<<<<<<< HEAD
 
     /*
     constructor(index, previousHash, timestamp, data, signature, nonce, hash) {
@@ -144,57 +139,20 @@ let addBlock = (newBlock) => {
 };
 
 let isValidNewBlock = (newBlock, previousBlock) => {
-=======
-}
-
-var digestData = (index, previousHash, timestamp, data) => {
-  const encoder = new TextEncoder();
-  const encodingData = encoder.encode(data);
-  const dataForHash = index + previousHash + timestamp + encodingData;
-  const hash = crypto.subtle.digest('SHA-256', dataForHash);
-  return hash;
-};
-
-var digestDataForBlock = (block) => {
-    return digestData(block.index, block.previousHash, block.timestamp, block.data);
-};
-
-var getGenesisBlock = () => {
-    return new Block(0, "0", 1465154705, "Mon genesis block !", "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
-};
-
-var generateNextBlock = (blockData) => {
-    var previousBlock = getLatestBlock();
-    var nextIndex = previousBlock.index + 1;
-    var nextTimestamp = new Date().getTime()/1000;
-    var nextHash = digestData(nextIndex, previousBlock.hash, nextTimestamp, blockData);
-    return new Block(nextIndex, previousBlock.hash, nextTimestamp, blockData, nextHash);
-};
-
-var blockchain = [getGenesisBlock];
-
-var isValidNewBlock = (newBlock, previousBlock) => {
->>>>>>> Feature-1
     if (previousBlock.index + 1 !== newBlock.index) {
         console.log('l\'index du nouveau block est incorrect.');
         return false;
     } else if (previousBlock.hash !== newBlock.previousHash) {
         console.log('le previousHash du nouveau block ne correspond pas au hash du previous block.');
         return false;
-<<<<<<< HEAD
     } else if (calculateHashForBlock(newBlock) !== newBlock.hash) {
         console.log(typeof (newBlock.hash) + ' ' + typeof calculateHashForBlock(newBlock));
         console.log('hash invalid: ' + calculateHashForBlock(newBlock) + ' ' + newBlock.hash);
-=======
-    } else if (digestDataForBlock(newBlock) !== newBlock.hash) {
-        console.log('Le hash du nouveau block est incoherent.');
->>>>>>> Feature-1
         return false;
     }
     return true;
 };
 
-<<<<<<< HEAD
 let connectToPeer = (newPeers) => {
     newPeers.forEach((peer) => {
         let ws = new WebSocket(peer);
@@ -243,14 +201,6 @@ let isValidChain = (blockchainToValidate) => {
     }
     let tempBlocks = [blockchainToValidate[0]];
     for (let i = 1 ; i < blockchainToValidate.length ; i++) {
-=======
-var isValidBlockchain = (blockchainToValidate) => {
-    if (JSON.stringify(blockchainToValidate[0]) !== JSON.stringify(getGenesisBlock())) {
-        return false;
-    }
-    var tempBlocks = [blockchainToValidate[0]];
-    for (var i = 1 ; i < blockchainToValidate.length ; i++) {
->>>>>>> Feature-1
         if (isValidNewBlock(blockchainToValidate[i], tempBlocks[i - 1])) {
             tempBlocks.push(blockchainToValidate[i]);
         } else {
@@ -260,7 +210,6 @@ var isValidBlockchain = (blockchainToValidate) => {
     return true;
 };
 
-<<<<<<< HEAD
 let getLatestBlock = () => blockchain[blockchain.length - 1];
 let queryChainLengthMessage = () => ({'type': MessageType.QUERY_LATEST});
 let queryAllMessage = () => ({'type': MessageType.QUERY_ALL});
@@ -278,18 +227,3 @@ let broadcast = (message) => sockets.forEach(socket => write(socket, message));
 connectToPeer(initialPeers);
 initHttpServer();
 initP2PServer();
-=======
-var replaceChain = (newBlocks) => {
-    if (isValidChain(newBlocks) && newBlocks.length > blockchain.length) {
-        console.log('La blockchain reçue est valide. Remplacer la blockchain actuelle par la blockchain reçue.');
-        blockchain = newBlocks;
-        broadcast(responseLatestMsg());
-    } else {
-        console.log('La blockchain reçue est invalide.');
-    }
-};
-
-var getLatestBlock = () => {
-    return blockchain[-1];
-};
->>>>>>> Feature-1

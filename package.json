@@ -8,10 +8,7 @@
  "dependencies": {
   "body-parser": "^1.15.2",
   "crypto-js": "^3.1.6",
-<<<<<<< HEAD
   "dotenv": "^10.0.0",
-=======
->>>>>>> Feature-1
   "express": "^4.17.1",
   "ws": "^1.1.0"
  },
